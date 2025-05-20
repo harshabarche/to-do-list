@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container" id="loginContainer">
+        <div class="form-container">
+            <h1>Task Manager</h1>
+            <div class="tabs">
+                <div class="tab active" data-tab="login">Login</div>
+                <div class="tab" data-tab="signup">Sign Up</div>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="active-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope icon"></i>
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-submit">Login</button>
+                <p class="error-message" id="loginError"></p>
+            </form>
+            
+            <!-- Sign Up Form -->
+            <form id="signupForm">
+                <div class="input-group">
+                    <i class="fas fa-user icon"></i>
+                    <input type="text" id="signupName" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope icon"></i>
+                    <input type="email" id="signupEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="signupPassword" placeholder="Password" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="btn-submit">Sign Up</button>
+                <p class="error-message" id="signupError"></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer" style="display: none;">
+        <header>
+            <h1>Task Manager</h1>
+            <div class="user-section">
+                <span id="userName"></span>
+                <button id="btnLogout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <button id="newTaskBtn" class="btn-primary"><i class="fas fa-plus"></i> New Task</button>
+                <div class="filter-section">
+                    <h3>Filters</h3>
+                    <ul>
+                        <li class="filter-item active" data-filter="all">All Tasks</li>
+                        <li class="filter-item" data-filter="today">Today</li>
+                        <li class="filter-item" data-filter="upcoming">Upcoming</li>
+                        <li class="filter-item" data-filter="completed">Completed</li>
+                    </ul>
+                </div>
+                <div class="google-calendar">
+                    <h3>Google Calendar</h3>
+                    <button id="connectGoogleBtn" class="btn-connect">
+                        <i class="fab fa-google"></i> Connect Google Calendar
+                    </button>
+                    <div id="calendarStatus" class="calendar-status">Not connected</div>
+                </div>
+            </div>
+            
+            <div class="task-container">
+                <div class="task-header">
+                    <h2 id="currentFilter">All Tasks</h2>
+                    <div class="sort-options">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy">
+                            <option value="date">Due Date</option>
+                            <option value="priority">Priority</option>
+                            <option value="name">Name</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="taskList" class="task-list">
+                    <!-- Tasks will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Task Form Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Add New Task</h2>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group">
+                    <label for="taskName">Task Name</label>
+                    <input type="text" id="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dueDate">Due Date</label>
+                        <input type="date" id="dueDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dueTime">Due Time</label>
+                        <input type="time" id="dueTime">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder">Reminder</label>
+                        <select id="reminder">
+                            <option value="none">None</option>
+                            <option value="15">15 minutes before</option>
+                            <option value="30">30 minutes before</option>
+                            <option value="60">1 hour before</option>
+                            <option value="1440">1 day before</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group calendar-option">
+                    <input type="checkbox" id="addToCalendar">
+                    <label for="addToCalendar">Add to Google Calendar</label>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="cancelTask" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="notificationContainer" class="notification-container"></div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
